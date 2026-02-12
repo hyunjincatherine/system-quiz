@@ -1,0 +1,1067 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>KRAFTON Onboarding · Matching Quiz</title>
+  <style>
+    :root{
+      --bgA:#F7FBFF;
+      --bgB:#EEF6FF;
+      --card:#FFFFFF;
+      --card2:#F7FAFF;
+      --stroke: rgba(15, 23, 42, .10);
+      --stroke2: rgba(15, 23, 42, .14);
+      --text:#0F172A;
+      --muted:#475569;
+      --muted2:#64748B;
+
+      --brand:#0EA5E9;   /* sky-500 */
+      --brand2:#22C55E;  /* green-500 */
+      --good:#16A34A;    /* green-600 */
+      --bad:#E11D48;     /* rose-600 */
+      --warn:#D97706;    /* amber-600 */
+
+      --shadow: 0 18px 50px rgba(2, 6, 23, .08);
+      --shadow2: 0 10px 26px rgba(2, 6, 23, .10);
+
+      --r16: 16px;
+      --r20: 20px;
+      --r24: 24px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+                   "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(900px 520px at 20% 0%, rgba(14,165,233,.18), transparent 60%),
+        radial-gradient(900px 520px at 95% 25%, rgba(34,197,94,.14), transparent 60%),
+        radial-gradient(900px 520px at 10% 95%, rgba(217,119,6,.12), transparent 60%),
+        linear-gradient(180deg, var(--bgA), var(--bgB));
+      overflow-x:hidden;
+    }
+
+    .wrap{
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 24px 16px 32px;
+    }
+
+    /* Header */
+    .top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+    .brandRow{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+    }
+    .logo{
+      width: 44px; height: 44px;
+      border-radius: 16px;
+      background:
+        radial-gradient(12px 12px at 30% 30%, rgba(255,255,255,.90), transparent 60%),
+        linear-gradient(135deg, rgba(14,165,233,.70), rgba(34,197,94,.45));
+      border:1px solid rgba(255,255,255,.80);
+      box-shadow: var(--shadow2);
+      display:grid;
+      place-items:center;
+      user-select:none;
+    }
+    .logo span{
+      font-weight: 900;
+      letter-spacing:-.6px;
+      color: rgba(255,255,255,.95);
+      font-size: 14px;
+    }
+    h1{
+      margin:0;
+      font-size: 18px;
+      letter-spacing:-0.3px;
+      line-height: 1.2;
+    }
+    .sub{
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      max-width: 680px;
+    }
+
+    .actions{
+      display:flex;
+      gap: 8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      align-items:center;
+    }
+
+    .btn{
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.75);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-weight: 800;
+      cursor:pointer;
+      transition: transform .06s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
+      user-select:none;
+      box-shadow: 0 6px 14px rgba(2,6,23,.06);
+    }
+    .btn:hover{
+      background: rgba(255,255,255, .92);
+      border-color: rgba(15,23,42,.18);
+      box-shadow: 0 10px 22px rgba(2,6,23,.10);
+    }
+    .btn:active{ transform: translateY(1px); }
+    .btn.primary{
+      background: rgba(14,165,233,.16);
+      border-color: rgba(14,165,233,.28);
+      box-shadow: 0 8px 16px rgba(14,165,233,.12);
+    }
+    .btn.primary:hover{
+      background: rgba(14,165,233,.22);
+      border-color: rgba(14,165,233,.38);
+    }
+    .btn.ghost{
+      background: rgba(255,255,255,.55);
+    }
+    .btn.danger{
+      background: rgba(225,29,72,.10);
+      border-color: rgba(225,29,72,.22);
+      box-shadow: 0 8px 16px rgba(225,29,72,.10);
+    }
+    .btn.danger:hover{
+      background: rgba(225,29,72,.14);
+      border-color: rgba(225,29,72,.32);
+    }
+    .btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      transform:none;
+      box-shadow:none;
+    }
+
+    /* Summary bar */
+    .summary{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 12px;
+      margin: 14px 0 14px;
+    }
+    @media (max-width: 820px){
+      .top{ flex-direction:column; align-items:stretch; }
+      .actions{ justify-content:flex-start; }
+      .summary{ grid-template-columns: 1fr; }
+    }
+
+    .panel{
+      border:1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.80), rgba(255,255,255,.60));
+      border-radius: var(--r24);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .panelInner{
+      padding: 14px 14px 12px;
+    }
+    .metaRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .chips{
+      display:flex;
+      gap: 8px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border:1px solid var(--stroke);
+      background: rgba(248,250,252,.9);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 850;
+      user-select:none;
+    }
+    .chip b{ color: var(--text); }
+
+    .progressWrap{
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(2,6,23,.06);
+      border: 1px solid rgba(15,23,42,.10);
+      overflow:hidden;
+    }
+    .progressBar{
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(14,165,233,.95), rgba(34,197,94,.85));
+      border-right: 1px solid rgba(255,255,255,.70);
+      transition: width .25s ease;
+    }
+
+    .help{
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+      padding: 14px 16px;
+      border-left:1px solid var(--stroke);
+      background: rgba(248,250,252,.75);
+      height: 100%;
+    }
+    .help kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 8px;
+      border:1px solid rgba(15,23,42,.12);
+      background: rgba(255,255,255,.8);
+      color: var(--text);
+    }
+
+    /* Board */
+    .board{
+      position:relative;
+      border:1px solid var(--stroke);
+      border-radius: var(--r24);
+      background: linear-gradient(180deg, rgba(255,255,255,.78), rgba(255,255,255,.56));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    /* ✅ 가운데 여백을 위한 스페이서 컬럼 추가 */
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 120px 1fr; /* 가운데 간격 */
+      gap: 12px;
+      padding: 16px;
+    }
+    @media (max-width: 820px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .colHeader{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 12px 12px;
+      border:1px solid var(--stroke);
+      border-radius: var(--r20);
+      background: rgba(248,250,252,.9);
+      margin-bottom: 10px;
+    }
+    .colHeader .title{
+      font-weight: 950;
+      letter-spacing: -.2px;
+      font-size: 13px;
+    }
+    .colHeader .desc{
+      font-size: 12px;
+      color: var(--muted2);
+      font-weight: 750;
+    }
+
+    .list{
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+
+    .item{
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      padding: 12px 12px;
+      min-height: 56px;
+      border-radius: var(--r20);
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.78);
+      transition: transform .06s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
+      cursor:pointer;
+    }
+    .item:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,.92);
+      border-color: rgba(15,23,42,.18);
+      box-shadow: 0 10px 22px rgba(2,6,23,.10);
+    }
+    .item.selected{
+      border-color: rgba(14,165,233,.55);
+      box-shadow: 0 0 0 4px rgba(14,165,233,.14) inset, 0 10px 24px rgba(2,6,23,.10);
+      background: rgba(14,165,233,.08);
+    }
+    .item.locked{
+      opacity:.95;
+    }
+
+    .textBlock{
+      display:flex;
+      flex-direction:column;
+      gap: 4px;
+      min-width: 0;
+    }
+    .small{
+      font-size: 12px;
+      color: var(--muted2);
+      font-weight: 900;
+      letter-spacing:.2px;
+    }
+    .main{
+      font-size: 14px;
+      line-height: 1.35;
+      font-weight: 850;
+      color: rgba(15,23,42,.92);
+      word-break: keep-all;
+      overflow-wrap:anywhere;
+    }
+
+    .dot{
+      width: 14px; height: 14px;
+      border-radius: 999px;
+      border: 2px solid rgba(15,23,42,.45);
+      background: rgba(255,255,255,.90);
+      flex: 0 0 auto;
+      position:relative;
+      box-shadow: 0 8px 18px rgba(2,6,23,.10);
+    }
+    .dot::after{
+      content:"";
+      position:absolute;
+      inset:-6px;
+      border-radius:999px;
+      background: transparent;
+      transition: background .18s ease;
+    }
+    .item:hover .dot::after{
+      background: rgba(14,165,233,.10);
+    }
+
+    .badge{
+      display:none;
+      margin-left: 10px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 950;
+      border:1px solid var(--stroke);
+      background: rgba(248,250,252,.9);
+      color: var(--muted);
+      white-space:nowrap;
+    }
+    .badge.good{
+      border-color: rgba(22,163,74,.28);
+      background: rgba(22,163,74,.10);
+      color: rgba(20,83,45,.98);
+    }
+    .badge.bad{
+      border-color: rgba(225,29,72,.28);
+      background: rgba(225,29,72,.10);
+      color: rgba(136,19,55,.98);
+    }
+
+    /* Bottom status card */
+    .statusCard{
+      margin-top: 14px;
+      border:1px solid var(--stroke);
+      border-radius: var(--r24);
+      background: rgba(255,255,255,.78);
+      box-shadow: var(--shadow2);
+      padding: 14px 16px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    /* Toast */
+    .toast{
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      opacity: 0;
+      pointer-events:none;
+      background: rgba(255,255,255,.90);
+      border:1px solid rgba(15,23,42,.12);
+      color: rgba(15,23,42,.92);
+      padding: 10px 12px;
+      border-radius: 16px;
+      box-shadow: 0 18px 60px rgba(2,6,23,.12);
+      backdrop-filter: blur(10px);
+      transition: opacity .18s ease, transform .18s ease;
+      max-width: min(760px, calc(100vw - 24px));
+      font-size: 13px;
+      line-height: 1.45;
+      z-index: 50;
+    }
+    .toast.show{
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .toast .t{
+      font-weight: 950;
+      color: rgba(15,23,42,.96);
+    }
+    .toast.good{ border-color: rgba(22,163,74,.26); }
+    .toast.bad { border-color: rgba(225,29,72,.26); }
+    .toast.info{ border-color: rgba(14,165,233,.26); }
+
+    /* SVG lines */
+    svg#lines{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      pointer-events:none;
+    }
+    .line{
+      fill:none;
+      stroke-linecap: round;
+      stroke-width: 3.6;
+      filter: drop-shadow(0 10px 18px rgba(2,6,23,.08));
+    }
+    .line.neutral{ stroke: rgba(14,165,233,.70); }
+    .line.good{ stroke: rgba(22,163,74,.78); }
+    .line.bad{ stroke: rgba(225,29,72,.78); }
+
+    /* Submit block inside status */
+    .submitRow{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(15,23,42,.14);
+    }
+    .submitNote{
+      color: var(--muted2);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+    a.linkBtn{
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    /* Confetti canvas */
+    canvas#confetti{
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events:none;
+      z-index: 60;
+    }
+
+    /* Accessibility focus */
+    .item:focus-visible, .btn:focus-visible, a.linkBtn:focus-visible{
+      outline: 3px solid rgba(14,165,233,.35);
+      outline-offset: 2px;
+      border-radius: 14px;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="confetti"></canvas>
+  <div class="toast" id="toast"></div>
+
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <div class="brandRow">
+          <div class="logo" aria-hidden="true"><span>ONB</span></div>
+          <div>
+            <h1>온보딩 미션 · 시스템 매칭 퀴즈</h1>
+            <p class="sub">
+              왼쪽 질문을 선택한 뒤 오른쪽 답변을 선택하면 연결됩니다.
+              <b>7개 모두 연결</b>하면 채점 버튼이 활성화돼요.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" id="btnGrade" disabled>채점</button>
+        <button class="btn ghost" id="btnShowAnswers" disabled>정답 보기</button>
+        <button class="btn danger" id="btnReset">리셋</button>
+      </div>
+    </div>
+
+    <div class="summary">
+      <div class="panel">
+        <div class="panelInner">
+          <div class="metaRow">
+            <div class="chips">
+              <span class="chip">진행 <b id="progress">0/7</b></span>
+              <span class="chip">점수 <b id="score">-</b></span>
+              <span class="chip">중복 연결 <b>불가</b></span>
+            </div>
+            <div class="chip">선택 해제 <b>ESC</b></div>
+          </div>
+
+          <div class="progressWrap" aria-label="progress">
+            <div class="progressBar" id="progressBar"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="help">
+          <b style="color:rgba(15,23,42,.92)">Tip</b><br/>
+          • 이미 연결된 질문을 다시 클릭하면 <b>연결 해제</b>됩니다.<br/>
+          • 모두 연결 후 <b>채점</b>하면 선 색으로 정오답이 표시됩니다.<br/>
+          • <b>채점 후</b> 완료 메일을 보낼 수 있어요. (점수/소요시간 자동 포함)
+        </div>
+      </div>
+    </div>
+
+    <div class="board" id="board">
+      <svg id="lines"></svg>
+
+      <div class="grid">
+        <section>
+          <div class="colHeader">
+            <div class="title">질문</div>
+            <div class="desc">클릭해서 선택</div>
+          </div>
+          <div class="list" id="leftList"></div>
+        </section>
+
+        <!-- ✅ 가운데 여백 스페이서 -->
+        <section aria-hidden="true"></section>
+
+        <section>
+          <div class="colHeader">
+            <div class="title">답변</div>
+            <div class="desc">클릭해서 연결</div>
+          </div>
+          <div class="list" id="rightList"></div>
+        </section>
+      </div>
+    </div>
+
+    <div class="statusCard" id="status">
+      아직 연결이 없습니다. 왼쪽 질문을 선택해보세요.
+    </div>
+  </div>
+
+<script>
+(() => {
+  // ====== 설정: 담당자 이메일 ======
+  const OWNER_EMAIL = "hyunjin@krafton.com";
+
+  // ====== 데이터 ======
+  const questions = [
+    { id: "q1", text: "일반품의(결재) 승인을 요청할 때 사용하는 시스템은?" },
+    { id: "q2", text: "법인카드 사용 내역을 정산할 때 사용하는 시스템은?" },
+    { id: "q3", text: "문서 작성, 일정 관리, 사내 정보 검색을 도와주는 크래프톤만의 챗봇의 이름은?" },
+    { id: "q4", text: "사내 주요 가이드와 업무 위키가 아카이빙된 곳은?" },
+    { id: "q5", text: "프로젝트/이슈 트래킹을 도와주는 업무 관리 시스템은?" },
+    { id: "q6", text: "실시간 소통과 협업을 위한 메신저 시스템은?" },
+    { id: "q7", text: "온라인 미팅 및 화상회의 시 사용하는 시스템은?" },
+  ];
+
+  const answers = [
+    { id: "a1", text: "Jira" },
+    { id: "a2", text: "Confluence(Wiki)" },
+    { id: "a3", text: "KRIS" },
+    { id: "a4", text: "Concur" },
+    { id: "a5", text: "Zoom" },
+    { id: "a6", text: "Slack" },
+    { id: "a7", text: "Kissflow" },
+  ];
+
+  const correct = {
+    q1: "a7",
+    q2: "a4",
+    q3: "a3",
+    q4: "a2",
+    q5: "a1",
+    q6: "a6",
+    q7: "a5",
+  };
+
+  // ====== 상태 ======
+  const state = {
+    selectedQ: null,
+    pairByQ: {},
+    pairByA: {},
+    graded: false,
+    lastScore: null,
+    startedAt: Date.now(),
+  };
+
+  // ====== DOM ======
+  const leftList = document.getElementById("leftList");
+  const rightList = document.getElementById("rightList");
+  const svg = document.getElementById("lines");
+  const board = document.getElementById("board");
+  const status = document.getElementById("status");
+  const progressEl = document.getElementById("progress");
+  const scoreEl = document.getElementById("score");
+  const progressBar = document.getElementById("progressBar");
+
+  const btnGrade = document.getElementById("btnGrade");
+  const btnReset = document.getElementById("btnReset");
+  const btnShowAnswers = document.getElementById("btnShowAnswers");
+  const toast = document.getElementById("toast");
+  const confettiCanvas = document.getElementById("confetti");
+
+  // ====== utils ======
+  const shuffle = (arr) => arr
+    .map(v => ({ v, r: Math.random() }))
+    .sort((a,b) => a.r - b.r)
+    .map(x => x.v);
+
+  function escapeHtml(str){
+    return String(str)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function setStatus(msg){
+    status.innerHTML = msg;
+  }
+
+  let toastTimer = null;
+  function showToast(kind, title, message){
+    toast.className = `toast show ${kind}`;
+    toast.innerHTML = `<span class="t">${escapeHtml(title)}</span> · ${escapeHtml(message)}`;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      toast.className = "toast";
+      toast.innerHTML = "";
+    }, 1800);
+  }
+
+  function updateProgress(){
+    const count = Object.keys(state.pairByQ).length;
+    progressEl.textContent = `${count}/${questions.length}`;
+    progressBar.style.width = `${Math.round((count / questions.length) * 100)}%`;
+
+    btnGrade.disabled = (count !== questions.length);
+    btnShowAnswers.disabled = !state.graded;
+  }
+
+  function clearSelections(){
+    state.selectedQ = null;
+    document.querySelectorAll(".item.selected").forEach(el => el.classList.remove("selected"));
+  }
+
+  function getDotCenter(dotEl){
+    const bRect = board.getBoundingClientRect();
+    const dRect = dotEl.getBoundingClientRect();
+    const x = (dRect.left - bRect.left) + dRect.width/2;
+    const y = (dRect.top  - bRect.top ) + dRect.height/2;
+    return { x, y };
+  }
+
+  function drawLines(){
+    svg.innerHTML = "";
+    const bRect = board.getBoundingClientRect();
+    svg.setAttribute("viewBox", `0 0 ${bRect.width} ${bRect.height}`);
+
+    Object.entries(state.pairByQ).forEach(([qId, aId]) => {
+      const qDot = document.querySelector(`.dot[data-dot-for="${qId}"]`);
+      const aDot = document.querySelector(`.dot[data-dot-for="${aId}"]`);
+      if(!qDot || !aDot) return;
+
+      const p1 = getDotCenter(qDot);
+      const p2 = getDotCenter(aDot);
+
+      const dx = Math.abs(p2.x - p1.x);
+      const c1x = p1.x + Math.min(260, dx * 0.45);  // 약간 더 완만
+      const c2x = p2.x - Math.min(260, dx * 0.45);
+
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.setAttribute("d", `M ${p1.x} ${p1.y} C ${c1x} ${p1.y}, ${c2x} ${p2.y}, ${p2.x} ${p2.y}`);
+
+      let cls = "line neutral";
+      if(state.graded){
+        cls = (correct[qId] === aId) ? "line good" : "line bad";
+      }
+      path.setAttribute("class", cls);
+      svg.appendChild(path);
+    });
+  }
+
+  function renderLockStates(){
+    document.querySelectorAll("[data-qid]").forEach(el => {
+      const qId = el.dataset.qid;
+      el.classList.toggle("locked", !!state.pairByQ[qId]);
+    });
+    document.querySelectorAll("[data-aid]").forEach(el => {
+      const aId = el.dataset.aid;
+      el.classList.toggle("locked", !!state.pairByA[aId]);
+    });
+  }
+
+  function rerenderAll(){
+    updateProgress();
+    renderLockStates();
+    drawLines();
+  }
+
+  function labelOfQ(qId){
+    const i = questions.findIndex(x => x.id === qId);
+    return `Q${i+1}`;
+  }
+  function labelOfA(aId){
+    const a = answers.find(x => x.id === aId);
+    return a ? a.text : aId;
+  }
+
+  function fmtDuration(ms){
+    const s = Math.max(0, Math.floor(ms/1000));
+    const mm = String(Math.floor(s/60)).padStart(2,"0");
+    const ss = String(s%60).padStart(2,"0");
+    return `${mm}:${ss}`;
+  }
+
+  function buildMailto(score){
+    const total = questions.length;
+    const duration = fmtDuration(Date.now() - state.startedAt);
+    const when = new Date().toLocaleString();
+
+    const subject = `[Onboarding Mission] 시스템 매칭 퀴즈 완료 (${score}/${total})`;
+    const body =
+`안녕하세요. 온보딩 미션(시스템 매칭 퀴즈) 결과를 공유드립니다.
+
+- 이름:
+- 소속:
+- 점수: ${score}/${total}
+- 소요 시간: ${duration}
+- 완료 시각: ${when}
+
+감사합니다.`;
+
+    return `mailto:${encodeURIComponent(OWNER_EMAIL)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  }
+
+  function renderSubmitBlock(score){
+    const total = questions.length;
+    const mailto = buildMailto(score);
+
+    return `
+      <div class="submitRow">
+        <a class="btn primary linkBtn" id="sendMailLink" href="${mailto}">
+          담당자에게 완료 메일 보내기
+        </a>
+        <div class="submitNote">
+          받는 사람: <b>${escapeHtml(OWNER_EMAIL)}</b><br/>
+          현재 점수: <b>${score}/${total}</b><br/>
+          점수와 소요시간이 자동으로 포함됩니다.<br/>
+          원하시면 다시 풀어본 뒤 제출해도 괜찮아요 🙂
+        </div>
+      </div>
+    `;
+  }
+
+  // ====== Confetti (축하 애니메이션) ======
+  let confettiRunning = false;
+  function launchConfetti(durationMs = 2200){
+    if(confettiRunning) return;
+    confettiRunning = true;
+
+    const ctx = confettiCanvas.getContext("2d");
+    const DPR = Math.max(1, Math.floor(window.devicePixelRatio || 1));
+
+    function resize(){
+      confettiCanvas.width = Math.floor(window.innerWidth * DPR);
+      confettiCanvas.height = Math.floor(window.innerHeight * DPR);
+      confettiCanvas.style.width = window.innerWidth + "px";
+      confettiCanvas.style.height = window.innerHeight + "px";
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    }
+    resize();
+
+    const colors = ["#0EA5E9","#22C55E","#F59E0B","#A78BFA","#FB7185","#34D399"];
+    const pieces = [];
+    const count = 160;
+
+    for(let i=0;i<count;i++){
+      pieces.push({
+        x: Math.random() * window.innerWidth,
+        y: -20 - Math.random() * window.innerHeight * 0.2,
+        w: 6 + Math.random()*6,
+        h: 8 + Math.random()*10,
+        vx: (Math.random()-0.5) * 5,
+        vy: 2 + Math.random()*5,
+        rot: Math.random() * Math.PI,
+        vr: (Math.random()-0.5) * 0.18,
+        color: colors[Math.floor(Math.random()*colors.length)],
+        alpha: 0.9
+      });
+    }
+
+    const t0 = performance.now();
+    function tick(t){
+      const elapsed = t - t0;
+      ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+
+      for(const p of pieces){
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.03;            // gravity
+        p.rot += p.vr;
+        p.alpha = Math.max(0, 0.95 - elapsed/(durationMs*1.2));
+
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+        ctx.restore();
+      }
+
+      if(elapsed < durationMs){
+        requestAnimationFrame(tick);
+      } else {
+        ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+        confettiRunning = false;
+      }
+    }
+
+    const onResize = () => resize();
+    window.addEventListener("resize", onResize, { once: true });
+    requestAnimationFrame(tick);
+  }
+
+  // ====== render lists ======
+  function renderLists(){
+    leftList.innerHTML = "";
+    rightList.innerHTML = "";
+
+    questions.forEach((q, idx) => {
+      const el = document.createElement("div");
+      el.className = "item";
+      el.tabIndex = 0;
+      el.dataset.qid = q.id;
+      el.innerHTML = `
+        <div class="textBlock">
+          <div class="small">Q${idx+1}</div>
+          <div class="main">${escapeHtml(q.text)}</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="badge" data-badge-q="${q.id}"></span>
+          <div class="dot" data-dot-for="${q.id}"></div>
+        </div>
+      `;
+      el.addEventListener("click", () => onSelectQuestion(q.id, el));
+      el.addEventListener("keydown", (e) => { if(e.key === "Enter") onSelectQuestion(q.id, el); });
+      leftList.appendChild(el);
+    });
+
+    shuffle(answers).forEach((a, idx) => {
+      const el = document.createElement("div");
+      el.className = "item";
+      el.tabIndex = 0;
+      el.dataset.aid = a.id;
+      el.innerHTML = `
+        <div class="dot" data-dot-for="${a.id}"></div>
+        <div class="textBlock">
+          <div class="small">A${idx+1}</div>
+          <div class="main">${escapeHtml(a.text)}</div>
+        </div>
+      `;
+      el.addEventListener("click", () => onSelectAnswer(a.id, el));
+      el.addEventListener("keydown", (e) => { if(e.key === "Enter") onSelectAnswer(a.id, el); });
+      rightList.appendChild(el);
+    });
+  }
+
+  // ====== interactions ======
+  function onSelectQuestion(qId, el){
+    if(state.graded) return;
+
+    if(state.pairByQ[qId]){
+      const prevA = state.pairByQ[qId];
+      delete state.pairByQ[qId];
+      delete state.pairByA[prevA];
+      clearSelections();
+      rerenderAll();
+      showToast("info", "연결 해제", `${labelOfQ(qId)} 연결이 해제됐어요`);
+      setStatus(`연결 해제됨: <b>${labelOfQ(qId)}</b> · 다시 선택해서 연결할 수 있어요.`);
+      return;
+    }
+
+    clearSelections();
+    state.selectedQ = qId;
+    el.classList.add("selected");
+    showToast("info", "질문 선택", `${labelOfQ(qId)} 선택됨 · 오른쪽에서 답을 선택하세요`);
+    setStatus(`선택됨: <b>${labelOfQ(qId)}</b><br/>오른쪽에서 답변을 선택해 연결하세요.`);
+  }
+
+  function onSelectAnswer(aId, el){
+    if(state.graded) return;
+
+    if(!state.selectedQ){
+      showToast("bad", "순서 확인", "먼저 왼쪽 질문을 선택해 주세요");
+      setStatus(`먼저 왼쪽 질문을 선택하세요.`);
+      return;
+    }
+
+    if(state.pairByA[aId]){
+      showToast("bad", "중복 연결 불가", "이 답변은 이미 다른 질문과 연결되어 있어요");
+      setStatus(`이 답변은 이미 다른 질문과 연결되어 있어요. (중복 연결 불가)`);
+      return;
+    }
+
+    const qId = state.selectedQ;
+    state.pairByQ[qId] = aId;
+    state.pairByA[aId] = qId;
+
+    clearSelections();
+    rerenderAll();
+
+    showToast("good", "연결 완료", `${labelOfQ(qId)} → ${labelOfA(aId)}`);
+    setStatus(`연결 완료 ✅<br/><b>${labelOfQ(qId)}</b> → <b>${escapeHtml(labelOfA(aId))}</b>`);
+
+    if(Object.keys(state.pairByQ).length === questions.length){
+      showToast("info", "준비 완료", "모두 연결했어요 · 이제 채점할 수 있어요");
+      setStatus(`모두 연결했어요! 이제 <b>채점</b>을 눌러 점수를 확인하세요.`);
+    }
+  }
+
+  // ====== grade ======
+  function grade(){
+    if(Object.keys(state.pairByQ).length !== questions.length) return;
+
+    let correctCount = 0;
+    const wrongs = [];
+
+    for(const q of questions){
+      const chosen = state.pairByQ[q.id];
+      const isCorrect = (chosen === correct[q.id]);
+      if(isCorrect) correctCount++;
+      else {
+        wrongs.push({
+          qId: q.id,
+          qText: q.text,
+          chosen: labelOfA(chosen),
+          answer: labelOfA(correct[q.id])
+        });
+      }
+
+      const badge = document.querySelector(`[data-badge-q="${q.id}"]`);
+      if(badge){
+        badge.style.display = "inline-flex";
+        badge.className = "badge " + (isCorrect ? "good" : "bad");
+        badge.textContent = isCorrect ? "정답" : "오답";
+      }
+    }
+
+    state.graded = true;
+    state.lastScore = correctCount;
+    scoreEl.textContent = `${correctCount}/${questions.length}`;
+    btnShowAnswers.disabled = false;
+
+    drawLines();
+
+    const submitBlock = renderSubmitBlock(correctCount);
+
+    if(wrongs.length === 0){
+      showToast("good", "전부 정답!", `점수 ${correctCount}/${questions.length}`);
+      setStatus(
+        `🎉 <b>전부 정답!</b> 점수: <b>${correctCount}/${questions.length}</b><br/>
+         시스템 이해도가 잘 반영되었어요 👏<br/>
+         아래 버튼을 통해 완료 메일을 보낼 수 있습니다.` + submitBlock
+      );
+      launchConfetti(2400);
+    } else {
+      showToast("bad", "채점 완료", `점수 ${correctCount}/${questions.length}`);
+      const list = wrongs.map(w =>
+        `• ${escapeHtml(w.qText)}<br/>
+         &nbsp;&nbsp;내 답: <b>${escapeHtml(w.chosen)}</b> / 정답: <b>${escapeHtml(w.answer)}</b>`
+      ).join("<br/><br/>");
+
+      setStatus(
+        `채점 완료. 점수: <b>${correctCount}/${questions.length}</b><br/><br/>
+         오답:<br/>${list}<br/><br/>
+         이번 결과는 학습 확인용입니다.<br/>
+         필요하다면 다시 풀어보고 제출해도 괜찮아요 🙂` + submitBlock
+      );
+    }
+  }
+
+  function showAnswers(){
+    if(!state.graded) return;
+    const lines = questions.map((q, i) => {
+      const aId = correct[q.id];
+      const aText = answers.find(a=>a.id===aId)?.text ?? aId;
+      return `• Q${i+1}: <b>${escapeHtml(aText)}</b>`;
+    }).join("<br/>");
+    showToast("info", "정답 보기", "전체 정답을 표시했어요");
+    setStatus(`<b>정답 리스트</b><br/>${lines}<br/><br/>리셋하면 다시 풀 수 있어요.`);
+  }
+
+  function reset(){
+    state.selectedQ = null;
+    state.pairByQ = {};
+    state.pairByA = {};
+    state.graded = false;
+    state.lastScore = null;
+    state.startedAt = Date.now();
+    scoreEl.textContent = "-";
+
+    document.querySelectorAll("[data-badge-q]").forEach(b => {
+      b.style.display = "none";
+      b.className = "badge";
+      b.textContent = "";
+    });
+
+    btnShowAnswers.disabled = true;
+    clearSelections();
+    rerenderAll();
+    showToast("info", "리셋", "다시 풀 수 있어요");
+    setStatus("리셋 완료. 왼쪽 질문을 선택해 시작하세요.");
+  }
+
+  // ====== events ======
+  btnGrade.addEventListener("click", grade);
+  btnReset.addEventListener("click", reset);
+  btnShowAnswers.addEventListener("click", showAnswers);
+
+  window.addEventListener("resize", () => drawLines());
+
+  window.addEventListener("keydown", (e) => {
+    if(e.key === "Escape") {
+      clearSelections();
+      showToast("info", "선택 해제", "질문 선택이 해제됐어요");
+      setStatus("선택 해제됨. 왼쪽 질문을 다시 선택하세요.");
+    }
+  });
+
+  // ====== init ======
+  renderLists();
+  rerenderAll();
+})();
+</script>
+</body>
+</html>

@@ -164,7 +164,7 @@ color: var(--text);
     .summary{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 16px;
       margin: 14px 0 14px;
     }
     @media (max-width: 920px){
@@ -189,16 +189,14 @@ color: var(--text);
     }
     .metaRow{
       display:flex;
+      flex-wrap: wrap;
       align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      margin-bottom: 10px;
+      gap: 8px;      
     }
     .chips{
       display:flex;
+      flex-wrap: wrap;
       gap: 8px;
-      flex-wrap:wrap;
-      align-items:center;
     }
     .chip{
       display:inline-flex;
@@ -1050,5 +1048,6 @@ color: var(--text);
 </script>
 </body>
 </html>
+
 
 
